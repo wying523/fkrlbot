@@ -18,7 +18,7 @@ if not os.pathisfile("config_bot.py"):
   exit(1)
 
 
-u_a = "Flesch-Kincaid Reading Level v0.0.1 by /u/discr3t3"
+u_a = "Flesch-Kincaid Reading Level v0.0.1 by /u/__0xDEADBEEF)"
 r = praw.Reddit(user_agent = u_a)
 
 subreddit = r.get_subreddit("pythonforengineers")
