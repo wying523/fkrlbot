@@ -1,4 +1,8 @@
 import praw
+import pdb
+import re
+import os
+from config_bot import *
 
 """
   FKRBot -- calculates the Flesch-Kincaid Reading Level
@@ -6,9 +10,19 @@ import praw
   Licensed under GPLv3
 """
 
+if not os.pathisfile("config_bot.py"):
+  print """ Please create a config file containing the 
+            username and password for your bot. 
 
-u_a = "Flesch–Kincaid Readability Bot v0.0.1 (by /u/discr3t3)"
+            Please see config_skel.py """
+  exit(1)
+
+
+u_a = "Flesch-Kincaid Reading Level v0.0.1 by /u/discr3t3"
 r = praw.Reddit(user_agent = u_a)
 
+subreddit = r.get_subreddit("pythonforengineers")
 
+
+r.login()
 
