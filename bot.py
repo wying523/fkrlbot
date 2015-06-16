@@ -124,15 +124,14 @@ def main():
 
         score_str = "Your post has a Flesch-Kincaid score of {}. This score indicates the readability of your title. ".format(reading_lvl)
         recmd_str = "Based on this score, this submission's title is {}. ".format(submstr)
-        grade_lvl_str = "In addition, your post is readable for an average student in grade {}.".format(int(grade_lvl + 0.5))
+        grade_lvl_str = "In addition, your title is readable for an average student in grade {}.".format(int(grade_lvl + 0.5))
         cmt_ftr = "\n\n---\nFKRLBot v0.0.3 | [PM Feedback](http://www.reddit.com/message/compose/?to=__0xDEADBEEF)"
 
         comment = score_str + recmd_str + grade_lvl_str + cmt_ftr
 
-        # submission.add_comment(comment)
+        submission.add_comment(comment)
         print comment
         num_comments = num_comments + 1
-        print "Sent {} comments so far".format(num_comments)
 
 
 if __name__ == "__main__":
