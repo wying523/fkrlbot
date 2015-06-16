@@ -130,8 +130,8 @@ def main():
         comment = score_str + recmd_str + grade_lvl_str + cmt_ftr
 
         submission.add_comment(comment)
-        print comment
         num_comments = num_comments + 1
+        print num_comments
 
 
 if __name__ == "__main__":
