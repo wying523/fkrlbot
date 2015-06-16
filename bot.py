@@ -44,16 +44,19 @@ def count_syllables(word):
   return num_vowels
 
 
-def title_score(nword, nsent, nsyl):
+def fkrl(nword, nsent, nsyl):
   return 206.835 - 1.015 * (nword / nsent) - 84.6 * (nsyl / nword)
+
+def fkgl(nword, nsent, nsyl):
+  return 0.39 * (nword / nsent) + 11.8 * (nsyl / nword) - 15.59
 
 
 def main():
-  u_a = "Flesch-Kincaid Reading Level v0.0.1 by /u/__0xDEADBEEF)"
+  u_a = "Flesch-Kincaid Reading Level v0.0.3 by /u/__0xDEADBEEF)"
   r = praw.Reddit(user_agent = u_a)
 
   # see config_skel.py for username and password formatting
-  r.login(REDDIT_USERNAME, REDDIT_PASSWORD, )
+  r.login(REDDIT_USERNAME, REDDIT_PASSWORD)
 
   # stores each post replied to's unique ID in a file
   already_done = []
@@ -62,10 +65,11 @@ def main():
   subreddit = r.get_subreddit(REDDIT_SUB)
   num_posts = 10
 
+  num_comments = 0;
   while True: 
 
     time.sleep(2)
-    for submission in subreddit.get_hot(limit = num_posts):
+    for submission in subreddit.get_new(limit = num_posts):
       """
         TODO: 
         (4) output a sentence describing the readibility of 
@@ -99,24 +103,36 @@ def main():
           i = i.lower()
           total_syllables = total_syllables + count_syllables(i)
 
-        score = title_score(num_words, num_sentences, total_syllables)
+        reading_lvl = fkrl(num_words, num_sentences, total_syllables)
+        grade_lvl = fkgl(num_words, num_sentences, total_syllables)
 
-        resp_corpus = ["an average 11 year old", 
-                "an average 13-to-15 year old", 
-                "an average college graduate"]
+        resp_corpus = ["easy to read", 
+                      "readable, but its clarity could be improved with very minor tweaks",
+                      "somewhat readable, but its clarity could be improved with some tweaks", 
+                      "hard to read -- please rephrase your future titles for clarity"]  
 
         submstr = ""
 
-        if score >= 80:
+        if reading_lvl >= 90:
           submstr = resp_corpus[0]
-        elif score >= 60 and score <= 70:
+        if reading_lvl > 70 and reading_lvl < 90:
           submstr = resp_corpus[1]
-        elif score < 50:
+        elif reading_lvl >= 60 and reading_lvl <= 70:
           submstr = resp_corpus[2]
+        elif reading_lvl < 50:
+          submstr = resp_corpus[3]
 
-        comment = "The Flesch-Kincaid score for this submission is {0}. This score indicates the readibility of your title. Based on your score, the title of your sumbission can be understood easily by {1}.\n\n---\nFKRLBot v0.0.1 | [PM Feedback](http://www.reddit.com/message/compose/?to=__0xDEADBEEF)".format(score, submstr)
+        score_str = "Your post has a Flesch-Kincaid score of {}. This score indicates the readability of your title. ".format(reading_lvl)
+        recmd_str = "Based on this score, this submission's title is {}. ".format(submstr)
+        grade_lvl_str = "In addition, your post is readable for an average student in grade {}.".format(int(grade_lvl + 0.5))
+        cmt_ftr = "\n\n---\nFKRLBot v0.0.3 | [PM Feedback](http://www.reddit.com/message/compose/?to=__0xDEADBEEF)"
 
-        submission.add_comment(comment)
+        comment = score_str + recmd_str + grade_lvl_str + cmt_ftr
+
+        # submission.add_comment(comment)
+        print comment
+        num_comments = num_comments + 1
+        print "Sent {} comments so far".format(num_comments)
 
 
 if __name__ == "__main__":
