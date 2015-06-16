@@ -1,4 +1,4 @@
-# FKRLBot
+# FKRLBot v0.0.4
 
 A bot that helps analyze the readability level of submission titles on Reddit. The bot uses the Flesch-Kincaid formula to determine the readability score. 
 

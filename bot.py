@@ -52,7 +52,7 @@ def fkgl(nword, nsent, nsyl):
 
 
 def main():
-  u_a = "Flesch-Kincaid Reading Level v0.0.3 by /u/__0xDEADBEEF)"
+  u_a = "Flesch-Kincaid Reading Level v0.0.4 by /u/__0xDEADBEEF)"
   r = praw.Reddit(user_agent = u_a)
 
   # see config_skel.py for username and password formatting
@@ -67,16 +67,9 @@ def main():
 
   num_comments = 0;
   while True: 
-
-    time.sleep(2)
     for submission in subreddit.get_new(limit = num_posts):
-      """
-        TODO: 
-        (4) output a sentence describing the readibility of 
-            the title
-        (5) submit the comment to all the new posts in a 
-            subreddit
-      """
+      # wait 2 seconds between each submission
+      time.sleep(2)
       if not submission.id in already_done:
         # don't comment on a submission that we've already dealt with 
         already_done.insert(0, submission.id)
@@ -124,15 +117,15 @@ def main():
 
         score_str = "Your post has a Flesch-Kincaid score of {}. This score indicates the readability of your title. ".format(reading_lvl)
         recmd_str = "Based on this score, this submission's title is {}. ".format(submstr)
-        grade_lvl_str = "In addition, your title is readable for an average student in grade {}.".format(int(grade_lvl + 0.5))
-        cmt_ftr = "\n\n---\nFKRLBot v0.0.3 | [PM Feedback](http://www.reddit.com/message/compose/?to=__0xDEADBEEF)"
+        grade_lvl_str = "An average student in grade {} or higher shouldn't have an issue reading your title.".format(int(grade_lvl + 0.5))
+        cmt_ftr = "\n\n---\nFKRLBot v0.0.4 | [Want to leave feedback? Shoot me a PM!](http://www.reddit.com/message/compose/?to=__0xDEADBEEF) | [Source](https://github.com/achiwhane/fkrlbot)"
 
         comment = score_str + recmd_str + grade_lvl_str + cmt_ftr
 
         submission.add_comment(comment)
+        time.sleep(2)
         num_comments = num_comments + 1
-        print num_comments
-
+        print "Submissions commented on so far: {}".format(num_comments)
 
 if __name__ == "__main__":
   main()
